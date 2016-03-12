@@ -1,63 +1,60 @@
 import System.Random
-
-data Weapon = Rock | Paper | Scissors deriving (Eq, Show, Bounded, Enum)
-
-instance Ord Weapon where
-  Rock `compare` Scissors = GT
-  x `compare` y = fromEnum x `compare` fromEnum y
-
-instance Random Weapon where
-    random g = let min = fromEnum (minBound :: Weapon)
-                   max = fromEnum (maxBound :: Weapon)
-                   (r, g') = randomR (min, max) g
-               in (toEnum r, g')
-
-    randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g in (toEnum r, g')
-
+import Weapons
 
 main = do
-  printText weaponSelection
+  let availableGameModes = map show [1, 2]
 
-  weaponStr <- getLine
+  printText gameModeSelection
+  gameModeChoice <- getLine
 
-  if not $ weaponStr `elem` ["1", "2", "3"]
-  then do
-    putStrLn "\nInvalid weapon! ... try again\n"
-    main
+  if not $ gameModeChoice `elem` availableGameModes
+  then restart "Invalid game mode!"
   else do
-    opponentWeapon <- genWeapon
-    let weaponIndex = (read weaponStr) - 1
-    let yourWeapon  = [Rock, Paper, Scissors] !! weaponIndex
+    let allWeapons = map show $ [1, 2, 3, 4, 5]
+    let availableWeapons = if gameModeChoice == "1" then take 3 allWeapons else allWeapons
+    let weaponChoices = take (length availableWeapons) [minBound :: Weapon .. maxBound :: Weapon]
+    let weaponChoicesStr = zipWith (\weapon num -> show num ++ ". " ++ show weapon) weaponChoices [1..]
 
-    printText $ battleSequence yourWeapon opponentWeapon
+    printText $ weaponSelection weaponChoicesStr
+    weaponStr <- getLine
 
-    putStrLn "\nPlay again? (y/n)"
+    if not $ weaponStr `elem` availableWeapons
+    then restart "Invalid weapon!"
+    else do
+      opponentWeapon <- genWeapon gameModeChoice
+      let weaponIndex = (read weaponStr) - 1
+      let yourWeapon  = weaponChoices !! weaponIndex
 
-    retry <- getLine
+      printText $ battleSequence yourWeapon opponentWeapon
 
-    if retry == "y" then main else return ()
+      putStrLn "\nPlay again? (y/n)"
 
+      retry <- getLine
 
+      if retry == "y" then main else return ()
 
-genWeapon :: IO Weapon
-genWeapon = do
-  newStdGen
-  gen <- getStdGen
-  let (w,_) = random gen :: (Weapon, StdGen)
-  return w
 
 eval :: Weapon -> Weapon -> String
-eval x y = case x `compare` y of
-            GT -> "         YOU WIN!"
-            LT -> "        YOU LOSE!"
-            EQ -> "      IT'S A TIE!"
+eval x y = let results = ["              YOU LOSE!", 
+                          "            IT'S A TIE!", 
+                          "               YOU WIN!"]
+           in results !! fromEnum (x `compare` y)
 
-weaponSelection :: [String]
-weaponSelection = ["  Choose your weapon!",
+restart :: String -> IO ()
+restart reason = if null reason
+                 then main
+                 else do 
+                    mapM putStrLn [divider, reason ++ " ... Try again", divider]
+                    main
+
+gameModeSelection :: [String]
+gameModeSelection = ["        - Choose a game mode -",
                    divider,
-                   "1. Rock",
-                   "2. Paper",
-                   "3. Scissors"]
+                   "1. Standard RPS",
+                   "2. Rock-Paper-Scissors-Lizard-Spock"]
+
+weaponSelection :: [String] -> [String]
+weaponSelection weapons = ["         Choose your weapon!", divider] ++ weapons
 
 battleSequence :: Weapon -> Weapon -> [String]
 battleSequence wx wy = [("You pick:         " ++ show wx ++ "!"),
@@ -70,4 +67,4 @@ printText txt = let formatted = "" : divider : txt ++ [divider]
                 in mapM putStrLn formatted
 
 divider :: String
-divider = " - - - - - - - - - - - - "
+divider = " - - - - - - - - - - - - - - - - - - "
