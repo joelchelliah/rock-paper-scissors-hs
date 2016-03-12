@@ -4,7 +4,8 @@ import Weapons
 main = do
   let availableGameModes = map show [1, 2]
 
-  printText gameModeSelection
+  printText header
+  printText modeSelection
   gameModeChoice <- getLine
 
   if not $ gameModeChoice `elem` availableGameModes
@@ -47,11 +48,11 @@ restart reason = if null reason
                     mapM putStrLn [divider, reason ++ " ... Try again", divider]
                     main
 
-gameModeSelection :: [String]
-gameModeSelection = ["        - Choose a game mode -",
-                   divider,
-                   "1. Standard RPS",
-                   "2. Rock-Paper-Scissors-Lizard-Spock"]
+modeSelection :: [String]
+modeSelection = ["       - Choose a game mode -",
+                 divider,
+                 "1. Standard RPS",
+                 "2. Rock-Paper-Scissors-Lizard-Spock"]
 
 weaponSelection :: [String] -> [String]
 weaponSelection weapons = ["         Choose your weapon!", divider] ++ weapons
@@ -65,6 +66,14 @@ battleSequence wx wy = [("You pick:         " ++ show wx ++ "!"),
 printText :: [String] -> IO [()]
 printText txt = let formatted = "" : divider : txt ++ [divider]
                 in mapM putStrLn formatted
+
+header :: [String]
+header = [divider,
+          "    ########  ########   ###### \n\
+          \    ##     ## ##     ## ##    ##\n\ 
+          \    ########  ########   ###### \n\ 
+          \    ##    ##  ##        ##    ##\n\ 
+          \    ##     ## ##         ######"]
 
 divider :: String
 divider = " - - - - - - - - - - - - - - - - - - "
