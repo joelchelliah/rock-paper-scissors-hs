@@ -1,38 +1,29 @@
 import System.Random
-import Weapons
+import Modes(getGameMode)
+import Weapons(Weapon, weaponChoices, getWeapon, genWeapon)
 
 main = do
-  let availableGameModes = map show [1, 2]
-
   printText header
   printText modeSelection
-  gameModeChoice <- getLine
 
-  if not $ gameModeChoice `elem` availableGameModes
-  then restart "Invalid game mode!"
-  else do
-    let allWeapons = map show $ [1, 2, 3, 4, 5]
-    let availableWeapons = if gameModeChoice == "1" then take 3 allWeapons else allWeapons
-    let weaponChoices = take (length availableWeapons) [minBound :: Weapon .. maxBound :: Weapon]
-    let weaponChoicesStr = zipWith (\weapon num -> show num ++ ". " ++ show weapon) weaponChoices [1..]
+  maybeGameMode <- getGameMode
 
-    printText $ weaponSelection weaponChoicesStr
-    weaponStr <- getLine
+  case maybeGameMode of
+    Nothing -> restart "Invalid game mode!"
+    (Just gameMode) -> do
 
-    if not $ weaponStr `elem` availableWeapons
-    then restart "Invalid weapon!"
-    else do
-      opponentWeapon <- genWeapon gameModeChoice
-      let weaponIndex = (read weaponStr) - 1
-      let yourWeapon  = weaponChoices !! weaponIndex
+      printText $ weaponsSelection gameMode
 
-      printText $ battleSequence yourWeapon opponentWeapon
+      maybeYourWeapon <- getWeapon gameMode
+      opponentsWeapon <- genWeapon gameMode
 
-      putStrLn "\nPlay again? (y/n)"
+      case maybeYourWeapon of
+        Nothing -> restart "Invalid weapon!"
+        (Just yourWeapon) -> do
+          printText $ battleSequence yourWeapon opponentsWeapon
 
-      retry <- getLine
-
-      if retry == "y" then main else return ()
+          retry <- getLine
+          if retry == "y" then main else return ()
 
 
 eval :: Weapon -> Weapon -> String
@@ -54,14 +45,20 @@ modeSelection = ["       - Choose a game mode -",
                  "1. Standard RPS",
                  "2. Rock-Paper-Scissors-Lizard-Spock"]
 
-weaponSelection :: [String] -> [String]
-weaponSelection weapons = ["         Choose your weapon!", divider] ++ weapons
+weaponsSelection :: String -> [String]
+weaponsSelection gameMode = let numberW = \weapon num -> show num ++ ". " ++ show weapon
+                                choices = weaponChoices gameMode
+                                weapons = zipWith numberW choices [1..]
+                            in ["         Choose your weapon!", divider] ++ weapons
 
 battleSequence :: Weapon -> Weapon -> [String]
 battleSequence wx wy = [("You pick:         " ++ show wx ++ "!"),
                         ("Your enemy picks: " ++ show wy ++ "!"),
                          divider,
-                         eval wx wy]
+                         eval wx wy,
+                         divider, divider,
+                         "          Play again? (y/n)"
+                        ]
 
 printText :: [String] -> IO [()]
 printText txt = let formatted = "" : divider : txt ++ [divider]
