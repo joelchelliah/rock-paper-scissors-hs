@@ -1,6 +1,7 @@
 module Weapons where
 
 import System.Random
+import Modes(GameMode)
 
 data Weapon = Rock
             | Paper
@@ -39,7 +40,7 @@ instance Random Weapon where
                         in  (toEnum r, g')
 
 
-genWeapon :: String -> IO Weapon
+genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
   newStdGen
   gen <- getStdGen
@@ -48,7 +49,7 @@ genWeapon gameMode = do
       (w,_) = randomR (min,max) gen :: (Weapon, StdGen)
   return w
 
-getWeapon :: String -> IO (Maybe Weapon)
+getWeapon :: GameMode -> IO (Maybe Weapon)
 getWeapon gameMode = do
   let choices = weaponChoices gameMode
   let weapons = availableWeapons gameMode
@@ -58,11 +59,11 @@ getWeapon gameMode = do
            then Just $ choices !! ((read weaponStr) - 1)
            else Nothing
 
-weaponChoices :: String -> [Weapon]
+weaponChoices :: GameMode -> [Weapon]
 weaponChoices gameMode = take (length $ availableWeapons gameMode) 
                               [minBound :: Weapon .. maxBound :: Weapon]
 
-availableWeapons :: String -> [String]
+availableWeapons :: GameMode -> [String]
 availableWeapons gameMode = let allWeapons = map show $ [1, 2, 3, 4, 5]
                             in if gameMode == "1" 
                                then take 3 allWeapons 
