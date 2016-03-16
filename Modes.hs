@@ -1,16 +1,25 @@
-module Modes(GameMode, getGameMode) where
+module Modes(GameMode(RPS, RPSLS), getGameMode) where
 
-type GameMode = String
+data GameMode = RPS 
+              | RPSLS
+              deriving (Show, Eq, Enum, Bounded)
 
 
 getGameMode :: IO (Maybe GameMode)
 getGameMode = do
-  let make gm = if gm `elem` availableGameModes 
-                then Just $ gm 
-                else Nothing
+  let validModes = fromGameMode <$> allGameModes
+      make mdStr = if mdStr `elem` validModes
+                   then Just $ toGameMode mdStr
+                   else Nothing
 
   make <$> getLine
 
 
-availableGameModes :: [GameMode]
-availableGameModes = map show $ [1, 2]
+toGameMode :: String -> GameMode
+toGameMode s = toEnum $ (read s :: Int) - 1
+
+fromGameMode :: GameMode -> String
+fromGameMode = show . (+1) . fromEnum
+
+allGameModes :: [GameMode]
+allGameModes = [minBound..maxBound]

@@ -1,7 +1,7 @@
 module Weapons (Weapon, genWeapon, getWeapon, weaponChoices) where
 
 import System.Random
-import Modes(GameMode)
+import Modes(GameMode(RPS))
 
 data Weapon = Rock
             | Paper
@@ -42,7 +42,7 @@ instance Random Weapon where
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
-  let maxBound' = if gameMode == "1" then Scissors else maxBound
+  let maxBound' = if gameMode == RPS then Scissors else maxBound
       gen = fst . randomR (minBound, maxBound')
 
   newStdGen >> gen <$> getStdGen
@@ -67,6 +67,6 @@ allWeapons = [minBound .. maxBound]
 
 validNumbers :: GameMode -> [String]
 validNumbers gameMode = let allNumbers = map show $ [1, 2, 3, 4, 5]
-                        in if gameMode == "1" 
+                        in if gameMode == RPS 
                            then take 3 allNumbers 
                            else allNumbers
