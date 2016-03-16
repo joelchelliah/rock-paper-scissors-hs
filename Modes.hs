@@ -5,12 +5,11 @@ type GameMode = String
 
 getGameMode :: IO (Maybe GameMode)
 getGameMode = do
-  gameMode <- getLine
+  let make gm = if gm `elem` availableGameModes 
+                then Just $ gm 
+                else Nothing
 
-  return (if gameMode `elem` availableGameModes 
-          then Just $ gameMode
-          else Nothing
-         )
+  make <$> getLine
 
 
 availableGameModes :: [GameMode]
