@@ -1,6 +1,7 @@
-module Modes where
+module Modes(GameMode, getGameMode) where
 
 type GameMode = String
+
 
 getGameMode :: IO (Maybe GameMode)
 getGameMode = do
@@ -10,6 +11,7 @@ getGameMode = do
           then Just $ gameMode
           else Nothing
          )
+
 
 availableGameModes :: [GameMode]
 availableGameModes = map show $ [1, 2]

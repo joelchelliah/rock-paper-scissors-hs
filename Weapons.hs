@@ -1,4 +1,4 @@
-module Weapons where
+module Weapons (Weapon, genWeapon, getWeapon, weaponChoices) where
 
 import System.Random
 import Modes(GameMode)
@@ -57,13 +57,13 @@ getWeapon gameMode = do
 
   make <$> getLine
 
-
-allWeapons :: [Weapon]
-allWeapons = [minBound .. maxBound]
-
 weaponChoices :: GameMode -> [Weapon]
 weaponChoices gameMode = let num = length $ validNumbers gameMode
                          in take num allWeapons
+
+
+allWeapons :: [Weapon]
+allWeapons = [minBound .. maxBound]
 
 validNumbers :: GameMode -> [String]
 validNumbers gameMode = let allNumbers = map show $ [1, 2, 3, 4, 5]

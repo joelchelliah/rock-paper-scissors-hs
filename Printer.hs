@@ -1,4 +1,4 @@
-module Printer where
+module Printer(header, modeSelection, weaponsSelection, battleSequence) where
 
 import Modes(GameMode)
 import Weapons(Weapon, weaponChoices)
@@ -30,6 +30,7 @@ battleSequence wx wy = printText [("You pick:         " ++ show wx ++ "!"),
                                    eval wx wy,
                                    divider, divider,
                                    "          Play again? (y/n)"]
+
 
 eval :: Weapon -> Weapon -> String
 eval x y = let results = ["              YOU LOSE!", 

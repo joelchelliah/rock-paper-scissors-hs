@@ -1,7 +1,6 @@
-import System.Random
 import Modes(getGameMode)
 import Weapons(Weapon, getWeapon, genWeapon)
-import qualified Printer as Print(header, modeSelection, weaponsSelection, battleSequence)
+import qualified Printer as Print
 
 main = do
   Print.header
