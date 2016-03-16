@@ -42,29 +42,31 @@ instance Random Weapon where
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
-  newStdGen
-  gen <- getStdGen
-  let min   = Rock
-      max   = if gameMode == "1" then Scissors else Spock
-      (w,_) = randomR (min,max) gen :: (Weapon, StdGen)
-  return w
+  let maxBound' = if gameMode == "1" then Scissors else maxBound
+      gen = fst . randomR (minBound, maxBound')
+
+  newStdGen >> gen <$> getStdGen
 
 getWeapon :: GameMode -> IO (Maybe Weapon)
 getWeapon gameMode = do
   let choices = weaponChoices gameMode
-  let weapons = availableWeapons gameMode
+      weapons = validNumbers gameMode
+      make wp = if wp `elem` weapons
+                then Just $ choices !! ((read wp) - 1)
+                else Nothing
 
-  weaponStr <- getLine
-  return $ if weaponStr `elem` weapons
-           then Just $ choices !! ((read weaponStr) - 1)
-           else Nothing
+  make <$> getLine
+
+
+allWeapons :: [Weapon]
+allWeapons = [minBound .. maxBound]
 
 weaponChoices :: GameMode -> [Weapon]
-weaponChoices gameMode = take (length $ availableWeapons gameMode) 
-                              [minBound :: Weapon .. maxBound :: Weapon]
+weaponChoices gameMode = let num = length $ validNumbers gameMode
+                         in take num allWeapons
 
-availableWeapons :: GameMode -> [String]
-availableWeapons gameMode = let allWeapons = map show $ [1, 2, 3, 4, 5]
-                            in if gameMode == "1" 
-                               then take 3 allWeapons 
-                               else allWeapons
+validNumbers :: GameMode -> [String]
+validNumbers gameMode = let allNumbers = map show $ [1, 2, 3, 4, 5]
+                        in if gameMode == "1" 
+                           then take 3 allNumbers 
+                           else allNumbers
