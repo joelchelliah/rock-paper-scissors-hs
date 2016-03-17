@@ -9,4 +9,4 @@ data GameMode = RPS
 instance RpsElem GameMode
 
 getGameMode :: IO (Maybe GameMode)
-getGameMode = make allElems <$> getLine
+getGameMode = make <$> getLine

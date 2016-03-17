@@ -1,7 +1,7 @@
 module Printer(header, modeSelection, weaponsSelection, battleSequence) where
 
 import Modes(GameMode)
-import Weapons(Weapon, weaponChoices)
+import Weapons(Weapon, weaponsIn)
 
 header :: IO ()
 header = printText [divider,
@@ -19,7 +19,7 @@ modeSelection = printText ["       - Choose a game mode -",
 
 weaponsSelection :: GameMode -> IO ()
 weaponsSelection gameMode = let numberW = \weapon num -> show num ++ ". " ++ show weapon
-                                choices = weaponChoices gameMode
+                                choices = weaponsIn gameMode
                                 weapons = zipWith numberW choices [1..]
                             in printText $ ["         Choose your weapon!", divider] ++ weapons
 

@@ -1,4 +1,4 @@
-module Weapons (Weapon, genWeapon, getWeapon, weaponChoices) where
+module Weapons (Weapon, genWeapon, getWeapon, weaponsIn) where
 
 import System.Random
 import RpsElem
@@ -44,15 +44,15 @@ instance RpsElem Weapon
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
-  let maxBound' = if gameMode == RPS then Scissors else maxBound
-      gen = fst . randomR (minBound, maxBound')
+  let max = if gameMode == RPS then Scissors else maxBound
+      gen = fst . randomR (minBound, max)
 
   newStdGen >> gen <$> getStdGen
 
 getWeapon :: GameMode -> IO (Maybe Weapon)
-getWeapon gameMode = make (weaponChoices gameMode) <$> getLine
+getWeapon gameMode = makeFrom (weaponsIn gameMode) <$> getLine
 
-weaponChoices :: GameMode -> [Weapon]
-weaponChoices gameMode = take (numWeapons gameMode) allElems
-                         where numWeapons RPS = 3
-                               numWeapons RPSLS = 5
+weaponsIn :: GameMode -> [Weapon]
+weaponsIn gameMode = take (numWeapons gameMode) allElems
+                     where numWeapons RPS = 3
+                           numWeapons RPSLS = 5
