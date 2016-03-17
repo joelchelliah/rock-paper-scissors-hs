@@ -1,7 +1,8 @@
 module Weapons (Weapon, genWeapon, getWeapon, weaponChoices) where
 
 import System.Random
-import Modes(GameMode(RPS))
+import RpsElem
+import Modes
 
 data Weapon = Rock
             | Paper
@@ -39,6 +40,7 @@ instance Random Weapon where
   randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g 
                         in  (toEnum r, g')
 
+instance RpsElem Weapon
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
@@ -48,25 +50,9 @@ genWeapon gameMode = do
   newStdGen >> gen <$> getStdGen
 
 getWeapon :: GameMode -> IO (Maybe Weapon)
-getWeapon gameMode = do
-  let choices = weaponChoices gameMode
-      weapons = validNumbers gameMode
-      make wp = if wp `elem` weapons
-                then Just $ choices !! ((read wp) - 1)
-                else Nothing
-
-  make <$> getLine
+getWeapon gameMode = make (weaponChoices gameMode) <$> getLine
 
 weaponChoices :: GameMode -> [Weapon]
-weaponChoices gameMode = let num = length $ validNumbers gameMode
-                         in take num allWeapons
-
-
-allWeapons :: [Weapon]
-allWeapons = [minBound .. maxBound]
-
-validNumbers :: GameMode -> [String]
-validNumbers gameMode = let allNumbers = map show $ [1, 2, 3, 4, 5]
-                        in if gameMode == RPS 
-                           then take 3 allNumbers 
-                           else allNumbers
+weaponChoices gameMode = take (numWeapons gameMode) allElems
+                         where numWeapons RPS = 3
+                               numWeapons RPSLS = 5
