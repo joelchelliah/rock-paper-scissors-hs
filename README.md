@@ -10,8 +10,9 @@ runhaskell rps.hs
 ```
 
 ## Updates
-**[12.03.2016]:**  
-- Added support for [Rock - Paper - Scissors - Lizard - Spock](http://bigbangtheory.wikia.com/wiki/Rock_Paper_Scissors_Lizard_Spock) mode! :dragon: :v:
+
+- **[12.03.2016]:** Added support for [Rock - Paper - Scissors - Lizard - Spock](http://bigbangtheory.wikia.com/wiki/Rock_Paper_Scissors_Lizard_Spock) mode! :dragon: :v:
+- **[18.03.2016]:** Added support for [RPS - 7](http://www.umop.com/rps7.htm) mode! :fire: :bread: :dash: :droplet:
 
 
 ## Preview
