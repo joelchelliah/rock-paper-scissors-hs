@@ -7,28 +7,56 @@ import Modes
 data Weapon = Rock
             | Paper
             | Scissors
+            | Fire
+            | Sponge
+            | Air
+            | Water
             | Lizard
             | Spock
-            deriving (Eq, Show, Bounded, Enum)
+            deriving (Eq, Show, Enum, Bounded)
 
 
 instance Ord Weapon where
-   Rock `compare` Scissors = GT
-   Scissors `compare` Rock = LT
+  Rock `compare` Scissors = GT
+  Rock `compare` Fire     = GT
+  Rock `compare` Sponge   = GT
+  Rock `compare` Lizard   = GT
 
-   Paper `compare` Spock = GT
-   Spock `compare` Paper = LT
+  Paper `compare` Air   = GT
+  Paper `compare` Water = GT
+  Paper `compare` Spock = GT
 
-   Lizard `compare` Spock = GT
-   Spock `compare` Lizard = LT
+  Scissors `compare` Sponge = GT
+  Scissors `compare` Air    = GT
+  Scissors `compare` Lizard = GT
+  Scissors `compare` Rock   = LT
 
-   Rock `compare` Lizard = GT
-   Lizard `compare` Rock = LT
+  Fire `compare` Sponge = GT
+  Fire `compare` Rock   = LT
+  
+  Sponge `compare` Air       = GT
+  Sponge `compare` Water     = GT
+  Sponge `compare` Rock      = LT
+  Sponge `compare` Fire      = LT
+  Sponge `compare` Scissors  = LT
 
-   Scissors `compare` Lizard = GT
-   Lizard `compare` Scissors = LT
+  Air `compare` Water       = GT
+  Air `compare` Scissors    = LT
+  Air `compare` Sponge      = LT
+  Air `compare` Paper       = LT
 
-   x `compare` y = fromEnum x `compare` fromEnum y
+  Water `compare` Sponge = LT
+  Water `compare` Paper  = LT
+  Water `compare` Air    = LT
+
+  Lizard `compare` Spock    = GT
+  Lizard `compare` Rock     = LT
+  Lizard `compare` Scissors = LT
+
+  Spock `compare` Paper = LT
+  Spock `compare` Lizard = LT
+
+  x `compare` y = fromEnum x `compare` fromEnum y
 
 
 instance Random Weapon where
@@ -44,15 +72,21 @@ instance RpsElem Weapon
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
-  let max = if gameMode == RPS then Scissors else maxBound
-      gen = fst . randomR (minBound, max)
+  let max = (subtract 1) . numWeapons $ gameMode
+      wps = weaponsIn gameMode
+      gen = (wps !!) . fst . randomR (0, max)
 
   newStdGen >> gen <$> getStdGen
-
+  
 getWeapon :: GameMode -> IO (Maybe Weapon)
 getWeapon gameMode = makeFrom (weaponsIn gameMode) <$> getLine
 
+
 weaponsIn :: GameMode -> [Weapon]
+weaponsIn RPSLS = (take 3 allElems) ++ (reverse . take 2 . reverse $ allElems)
 weaponsIn gameMode = take (numWeapons gameMode) allElems
-                     where numWeapons RPS = 3
-                           numWeapons RPSLS = 5
+
+numWeapons :: GameMode -> Int
+numWeapons RPS = 3
+numWeapons RPSLS = 5
+numWeapons RPS_7 = 7

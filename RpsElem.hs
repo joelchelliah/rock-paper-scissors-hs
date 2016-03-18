@@ -5,9 +5,9 @@ class (Eq r, Enum r, Bounded r) => RpsElem r where
   make = makeFrom allElems
 
   makeFrom :: [r] -> String -> Maybe r
-  makeFrom rs str = let i = (read str :: Int) - 1
-                    in if i `elem` (fromEnum <$> rs)
-                       then Just $ rs !! i
+  makeFrom rs str = let i = read str :: Int
+                    in if i `elem` [1 .. length rs]
+                       then Just $ rs !! (i - 1)
                        else Nothing
 
   allElems :: [r]
