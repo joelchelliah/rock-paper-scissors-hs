@@ -1,6 +1,8 @@
 module RpsElem where
 
-class (Eq r, Enum r, Bounded r) => RpsElem r where
+import System.Random
+
+class (Eq r, Enum r, Bounded r, Random r) => RpsElem r where
   make :: String -> Maybe r
   make = makeFrom allElems
 
@@ -9,6 +11,13 @@ class (Eq r, Enum r, Bounded r) => RpsElem r where
                     in if i `elem` [1 .. length rs]
                        then Just $ rs !! (i - 1)
                        else Nothing
+
+  gen :: IO r
+  gen = genFrom (minBound, maxBound)
+
+  genFrom :: (r, r) -> IO r
+  genFrom rng = let gen = fst . randomR rng
+                in newStdGen >> gen <$> getStdGen
 
   allElems :: [r]
   allElems = [minBound .. maxBound]
