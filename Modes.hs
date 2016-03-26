@@ -31,10 +31,15 @@ instance RpsElem GameMode
 
 
 getGameMode :: IO (Maybe GameMode)
-getGameMode = make <$> getLine
+getGameMode = do
+  gm <- make <$> getLine
+  
+  case gm of 
+    (Just RANDOM) -> Just <$> genGameMode
+    _             -> return gm
 
 genGameMode :: IO GameMode
-genGameMode = gen
+genGameMode = genFrom (minBound, pred maxBound)
 
 gameModeNames :: [String]
 gameModeNames = let modes = allElems :: [GameMode]
