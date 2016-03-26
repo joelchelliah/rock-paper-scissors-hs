@@ -2,6 +2,7 @@ module Printer(header, modeSelection, weaponsSelection, battleSequence) where
 
 import Modes(GameMode, gameModeNames)
 import Weapons(Weapon, weaponsIn)
+import Reactions(getReaction)
 
 header :: IO ()
 header = printText [divider,
@@ -23,6 +24,8 @@ weaponsSelection gameMode = let numberW = \weapon num -> show num ++ ". " ++ sho
 battleSequence :: Weapon -> Weapon -> IO ()
 battleSequence wx wy = printText [("You pick:         " ++ show wx ++ "!"),
                                   ("Your enemy picks: " ++ show wy ++ "!"),
+                                   divider,
+                                   getReaction wx wy,
                                    divider,
                                    eval wx wy,
                                    divider, divider,

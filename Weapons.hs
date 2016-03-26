@@ -1,4 +1,4 @@
-module Weapons (Weapon, genWeapon, getWeapon, weaponsIn) where
+module Weapons (Weapon(..), genWeapon, getWeapon, weaponsIn) where
 
 import System.Random
 import RpsElem
