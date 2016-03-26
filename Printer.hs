@@ -6,41 +6,58 @@ import Reactions(getReaction)
 
 header :: IO ()
 header = printText [divider,
-                    "    ########  ########   ###### \n\
-                    \    ##     ## ##     ## ##    ##\n\ 
-                    \    ########  ########   ###### \n\ 
-                    \    ##    ##  ##        ##    ##\n\ 
-                    \    ##     ## ##         ######"]
+                    "########  ########   ####### ",
+                    "##     ## ##     ## ###    ##",
+                    "########  ########   ######  ",
+                    "##    ##  ##       ##    ### ",
+                    "##     ## ##        #######  "]
 
 modeSelection :: IO ()
-modeSelection = printText $ ["       - Choose a game mode -", divider] ++ gameModeNames
+modeSelection = let formatted = indent <$> padRight <$> gameModeNames
+                in printText $ "- Choose a game mode -" : divider : formatted
 
 weaponsSelection :: GameMode -> IO ()
-weaponsSelection gameMode = let numberW = \weapon num -> show num ++ ". " ++ show weapon
-                                choices = weaponsIn gameMode
-                                weapons = zipWith numberW choices [1..]
-                            in printText $ ["         Choose your weapon!", divider] ++ weapons
+weaponsSelection gameMode = let numberW   = \weapon num -> show num ++ ". " ++ show weapon
+                                weapons   = weaponsIn gameMode
+                                numbered  = zipWith numberW weapons [1..]
+                                formatted = indent <$> padRight <$> numbered
+                            in printText $ "- Choose your weapon -" : divider : formatted
 
 battleSequence :: Weapon -> Weapon -> IO ()
 battleSequence wx wy = printText [("You pick:         " ++ show wx ++ "!"),
                                   ("Your enemy picks: " ++ show wy ++ "!"),
-                                   divider,
+                                   divider, divider,
                                    getReaction wx wy,
-                                   divider,
                                    eval wx wy,
                                    divider, divider,
-                                   "          Play again? (y/n)"]
+                                   "Play again? (y/n)"]
 
 
 eval :: Weapon -> Weapon -> String
-eval x y = let results = ["              YOU LOSE!", 
-                          "            IT'S A TIE!", 
-                          "               YOU WIN!"]
+eval x y = let results = ["YOU LOSE!",
+                          "IT'S A TIE!",
+                          "YOU WIN!"]
            in results !! fromEnum (x `compare` y)
-
-divider :: String
-divider = " - - - - - - - - - - - - - - - - - - "
 
 printText :: [String] -> IO ()
 printText txt = let formatted = "" : divider : txt ++ [divider]
-                in mapM_ putStrLn formatted
+                in mapM_ putStrLn $ padCenter <$> formatted
+
+padCenter :: String -> String
+padCenter s = if length s < gameWidth
+              then padCenter $ " " ++ s ++ " "
+              else s
+
+padRight :: String -> String
+padRight s = if length s < gameWidth
+             then padRight $ s ++ " "
+             else s
+
+indent :: String -> String
+indent s = "  " ++ s
+
+divider :: String
+divider = concat $ map (\_ -> " -") [1 .. gameWidth `div` 2]
+
+gameWidth :: Int
+gameWidth = 50

@@ -12,7 +12,7 @@ instance Show Reaction where
   show r = let s = (show . subject) r
                v = verb r
                o = (show . object) r
-           in ((++"!") . map toUpper . unwords) [s, v, o]
+           in map toUpper . unwords $ [s, v, o]
 
 
 getReaction :: Weapon -> Weapon -> String
