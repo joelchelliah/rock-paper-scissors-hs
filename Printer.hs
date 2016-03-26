@@ -21,7 +21,11 @@ weaponsSelection gameMode = let numberW   = \weapon num -> show num ++ ". " ++ s
                                 weapons   = weaponsIn gameMode
                                 numbered  = zipWith numberW weapons [1..]
                                 formatted = indent <$> padRight <$> numbered
-                            in printText $ "- Choose your weapon -" : divider : formatted
+                            in printText $ ["<> " ++ show gameMode ++ " <>",
+                                            divider,
+                                            "- Choose your weapon -",
+                                            divider
+                                           ] ++ formatted
 
 battleSequence :: Weapon -> Weapon -> IO ()
 battleSequence wx wy = printText [("You pick:         " ++ show wx ++ "!"),
@@ -40,7 +44,8 @@ eval x y = let results = ["YOU LOSE!",
            in results !! fromEnum (x `compare` y)
 
 printText :: [String] -> IO ()
-printText txt = let formatted = "" : divider : txt ++ [divider]
+printText txt = let dividers  = [divider, divider]
+                    formatted = "" : dividers ++ txt ++ dividers
                 in mapM_ putStrLn $ padCenter <$> formatted
 
 padCenter :: String -> String
