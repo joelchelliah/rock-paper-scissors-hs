@@ -1,7 +1,7 @@
 module Weapons (Weapon(..), genWeapon, getWeapon, weaponsIn) where
 
 import System.Random
-import RpsElement
+import RpsElements
 import GameModes
 
 data Weapon = Rock

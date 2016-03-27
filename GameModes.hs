@@ -4,7 +4,7 @@ module GameModes(GameMode(..),
              gameModeNames) where
 
 import System.Random
-import RpsElement
+import RpsElements
 
 data GameMode = RPS 
               | RPSLS

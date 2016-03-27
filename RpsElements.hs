@@ -1,4 +1,4 @@
-module RpsElement where
+module RpsElements where
 
 import System.Random
 
