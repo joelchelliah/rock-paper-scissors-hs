@@ -1,10 +1,10 @@
-module Modes(GameMode(..), 
+module GameModes(GameMode(..), 
              getGameMode,
              genGameMode,
              gameModeNames) where
 
 import System.Random
-import RpsElem
+import RpsElement
 
 data GameMode = RPS 
               | RPSLS
@@ -27,7 +27,7 @@ instance Show GameMode where
   show RPS_7  = "RPS-7"
   show RANDOM = "Random"
 
-instance RpsElem GameMode
+instance RpsElement GameMode
 
 
 getGameMode :: IO (Maybe GameMode)

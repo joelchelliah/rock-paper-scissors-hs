@@ -1,8 +1,8 @@
 module Weapons (Weapon(..), genWeapon, getWeapon, weaponsIn) where
 
 import System.Random
-import RpsElem
-import Modes
+import RpsElement
+import GameModes
 
 data Weapon = Rock
             | Paper
@@ -68,7 +68,7 @@ instance Random Weapon where
   randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g 
                         in  (toEnum r, g')
 
-instance RpsElem Weapon
+instance RpsElement Weapon
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do

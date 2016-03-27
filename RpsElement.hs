@@ -1,8 +1,8 @@
-module RpsElem where
+module RpsElement where
 
 import System.Random
 
-class (Eq r, Enum r, Bounded r, Random r) => RpsElem r where
+class (Eq r, Enum r, Bounded r, Random r) => RpsElement r where
   make :: String -> Maybe r
   make = makeFrom allElems
 

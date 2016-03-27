@@ -1,5 +1,5 @@
 import Control.Monad(when)
-import Modes(getGameMode)
+import GameModes(getGameMode)
 import Weapons(Weapon, getWeapon, genWeapon)
 import qualified Printer as Print
 
