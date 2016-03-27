@@ -1,0 +1,4 @@
+# --make output
+*.hi
+*.o
+rps
