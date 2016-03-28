@@ -1,16 +1,21 @@
-import Control.Monad(when)
 import GameModes(getGameMode)
 import Weapons(Weapon, getWeapon, genWeapon)
 import qualified Printer as Print
+import ScoreBoard
 
-main = do
-  Print.header
+main = Print.header 
+    >> play initScore
+    >> Print.footer
+
+
+play :: Score -> IO()
+play currentScore = do
   Print.modeSelection
 
   maybeGameMode <- getGameMode
 
   case maybeGameMode of
-    Nothing -> restart "Invalid game mode!"
+    Nothing -> restart "Invalid game mode!" currentScore
     (Just gameMode) -> do
       Print.weaponsSelection gameMode
 
@@ -18,16 +23,22 @@ main = do
       opponentsWeapon <- genWeapon gameMode
 
       case maybeYourWeapon of
-        Nothing -> restart "Invalid weapon!"
+        Nothing -> restart "Invalid weapon!" currentScore
         (Just yourWeapon) -> do
-          Print.battleSequence yourWeapon opponentsWeapon
+          let outcome  = yourWeapon `compare` opponentsWeapon
+              newScore = updateScore outcome currentScore
 
-          getLine >>= retry
+          Print.battleSequence yourWeapon opponentsWeapon outcome
+          Print.score newScore
 
+          getLine >>= retry newScore
 
-retry :: String -> IO()
-retry ans = when (ans == "y") main
+retry :: Score -> String -> IO()
+retry score ans = if ans == "y"
+                  then play score
+                  else return ()
 
-restart :: String -> IO ()
-restart reason = do putStrLn $ reason ++ " ... Try again"
-                    main
+restart :: String -> Score -> IO ()
+restart reason score = do 
+  putStrLn $ reason ++ " ... Try again"
+  play score

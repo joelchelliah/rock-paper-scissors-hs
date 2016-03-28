@@ -1,16 +1,21 @@
-module Printer(header, modeSelection, weaponsSelection, battleSequence) where
+module Printer(header, footer, modeSelection, 
+               weaponsSelection, battleSequence, 
+               score) where
 
 import GameModes(GameMode, gameModeNames)
 import Weapons(Weapon, weaponsIn)
 import Reactions(getReaction)
+import ScoreBoard(Score)
 
 header :: IO ()
-header = printText [divider,
-                    "########  ########   ####### ",
+header = printText ["########  ########   ####### ",
                     "##     ## ##     ## ###    ##",
                     "########  ########   ######  ",
                     "##    ##  ##       ##    ### ",
                     "##     ## ##        #######  "]
+
+footer :: IO ()
+footer = printText ["- Game over -"]
 
 modeSelection :: IO ()
 modeSelection = let formatted = indent <$> padRight <$> gameModeNames
@@ -29,21 +34,25 @@ weaponsSelection gameMode = let numberWpn = \wpn num -> show num ++ ". " ++ show
                                          : divider
                                          : formatted
 
-battleSequence :: Weapon -> Weapon -> IO ()
-battleSequence wx wy = printText [("You pick:         " ++ show wx ++ "!"),
-                                  ("Your enemy picks: " ++ show wy ++ "!"),
-                                   divider, divider,
-                                   getReaction wx wy,
-                                   eval wx wy,
-                                   divider, divider,
-                                   "Play again? (y/n)"]
+battleSequence :: Weapon -> Weapon -> Ordering -> IO ()
+battleSequence w1 w2 outcome = printText [("You pick:         " ++ show w1 ++ "!"),
+                                          ("Your enemy picks: " ++ show w2 ++ "!"),
+                                           divider, divider,
+                                           getReaction w1 w2,
+                                           eval outcome]
+
+score :: Score -> IO ()
+score s = printText $ "- Current score -"
+                    : show s
+                    : divider
+                    : "\n"
+                    : ["Play again? (y/n)"]
 
 
-eval :: Weapon -> Weapon -> String
-eval x y = let results = ["YOU LOSE!",
-                          "IT'S A TIE!",
-                          "YOU WIN!"]
-           in results !! fromEnum (x `compare` y)
+eval :: Ordering -> String
+eval LT = "YOU WIN!"
+eval EQ = "IT'S A TIE!"
+eval GT = "YOU LOSE!"
 
 printText :: [String] -> IO ()
 printText txt = let dividers  = [divider, divider]
