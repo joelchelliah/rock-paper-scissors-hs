@@ -6,7 +6,7 @@ A text-based implementation of the game [Rock - Paper - Scissors](https://en.wik
 ```bash
 git clone https://github.com/joelchelliah/rock-paper-scissors-hs.git rps && cd rps
 
-runhaskell rps.hs
+./rps
 ```
 
 ## Supported game modes

@@ -3,7 +3,7 @@ module ScoreBoard where
 newtype Score = Score (Int, Int, Int)
 
 instance Show Score where
-  show (Score (wins, ties, loss)) = let wrap result = "[ " ++ result ++ " ]"
+  show (Score (wins, ties, loss)) = let wrap result = "[ " ++ result ++ " ] "
                                         display 1 s = wrap $ show 1 ++ " " ++ (head . words) s
                                         display p s = wrap $ show p ++ " " ++ (last . words) s
                                     in (display wins "win wins")

@@ -8,14 +8,14 @@ main = Print.header
     >> Print.footer
 
 
-play :: Score -> IO()
-play currentScore = do
+play :: Score -> IO ()
+play score = do
   Print.modeSelection
 
   maybeGameMode <- getGameMode
 
   case maybeGameMode of
-    Nothing -> restart "Invalid game mode!" currentScore
+    Nothing -> restart "Invalid game mode!" score
     (Just gameMode) -> do
       Print.weaponsSelection gameMode
 
@@ -23,17 +23,17 @@ play currentScore = do
       opponentsWeapon <- genWeapon gameMode
 
       case maybeYourWeapon of
-        Nothing -> restart "Invalid weapon!" currentScore
+        Nothing -> restart "Invalid weapon!" score
         (Just yourWeapon) -> do
           let outcome  = yourWeapon `compare` opponentsWeapon
-              newScore = updateScore outcome currentScore
+              newScore = updateScore outcome score
 
           Print.battleSequence yourWeapon opponentsWeapon outcome
           Print.score newScore
 
           getLine >>= retry newScore
 
-retry :: Score -> String -> IO()
+retry :: Score -> String -> IO ()
 retry score ans = if ans == "y"
                   then play score
                   else return ()
