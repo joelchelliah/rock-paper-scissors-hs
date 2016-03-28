@@ -81,10 +81,10 @@ genWeapon gameMode = do
 getWeapon :: GameMode -> IO (Maybe Weapon)
 getWeapon gameMode = makeFrom (weaponsIn gameMode) <$> getLine
 
-
 weaponsIn :: GameMode -> [Weapon]
 weaponsIn RPSLS = (take 3 allElems) ++ (reverse . take 2 . reverse $ allElems)
 weaponsIn gameMode = take (numWeapons gameMode) allElems
+
 
 numWeapons :: GameMode -> Int
 numWeapons RPS = 3
