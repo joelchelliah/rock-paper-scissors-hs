@@ -21,7 +21,7 @@ play score = do
     (Just gameMode) -> do
       Print.weaponsSelection gameMode
 
-      maybeYourWeapon <- getWeapon gameMode
+      maybeYourWeapon <- getWeapon gameMode <$> getLine
       opponentsWeapon <- genWeapon gameMode
 
       case maybeYourWeapon of

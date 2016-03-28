@@ -78,8 +78,8 @@ genWeapon gameMode = do
 
   newStdGen >> gen <$> getStdGen
   
-getWeapon :: GameMode -> IO (Maybe Weapon)
-getWeapon gameMode = makeFrom (weaponsIn gameMode) <$> getLine
+getWeapon :: GameMode -> String -> (Maybe Weapon)
+getWeapon gameMode = makeFrom (weaponsIn gameMode)
 
 weaponsIn :: GameMode -> [Weapon]
 weaponsIn RPSLS = (take 3 allElems) ++ (reverse . take 2 . reverse $ allElems)
