@@ -1,6 +1,2 @@
-# -- make output
-*.hi
-*.o
-
-# -- Stack
+# Stack
 .stack-work
