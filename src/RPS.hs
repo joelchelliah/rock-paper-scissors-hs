@@ -1,11 +1,13 @@
+module RPS(runRps) where
+
 import GameModes(getGameMode)
 import Weapons(Weapon, getWeapon, genWeapon)
 import qualified Printer as Print
 import ScoreBoard
 
-main = Print.header 
-    >> play initScore
-    >> Print.footer
+runRps = Print.header 
+      >> play initScore
+      >> Print.footer
 
 
 play :: Score -> IO ()
