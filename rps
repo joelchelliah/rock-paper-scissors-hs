@@ -1,0 +1,3 @@
+#!/bin/bash
+
+runhaskell -i/"$PWD"/src src/RPS.hs
