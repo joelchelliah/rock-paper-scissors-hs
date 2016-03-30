@@ -25,5 +25,5 @@ spec = hspec $ do
 
      it "gets the game mode for given input" $ property $
        \(Input i) -> if validInput i
-                     then getGameMode i == Just (expectedGameMode i)
-                     else getGameMode i == Nothing
+                     then getGameMode i == Right (expectedGameMode i)
+                     else getGameMode i == Left  ( "Invalid game mode!" )

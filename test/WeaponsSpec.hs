@@ -6,23 +6,26 @@ import GameModes
 import Weapons
 
 newtype Input = Input { toStr :: String } deriving Show
-type IsValidInput = (String -> Bool)
 
 instance Arbitrary Input where
   arbitrary = do
     i <- choose (0, 50)
     return . Input . show $ (i :: Int)
 
+
+type IsValidInput   = (String -> Bool)
+type GetWeaponFunc  = (String -> Either String Weapon)
+type ExpectedWeapon = (String -> Weapon)
+
 rpsWeapons   = [Rock, Paper, Scissors]
 rpslsWeapons = [Rock, Paper, Scissors, Lizard, Spock]
 rps7Weapons  = [Rock, Paper, Scissors, Fire, Sponge, Air, Water]
 
 
-get_weapon_prop :: Input -> IsValidInput -> (String -> Maybe Weapon) -> (String -> Weapon) -> Bool
-get_weapon_prop (Input i) isValid getWpn expectedWeapon =
-            if isValid i
-            then getWpn i == Just (expectedWeapon i)
-            else getWpn i == Nothing
+get_weapon_prop :: Input -> IsValidInput -> GetWeaponFunc -> ExpectedWeapon -> Bool
+get_weapon_prop (Input i) isValid getWeaponFunc expectedWeapon
+  | isValid i = getWeaponFunc i == Right (expectedWeapon i)
+  | otherwise = getWeaponFunc i == Left  ("Invalid weapon!")
 
 
 spec :: IO ()

@@ -78,8 +78,10 @@ genWeapon gameMode = do
 
   newStdGen >> gen <$> getStdGen
   
-getWeapon :: GameMode -> String -> (Maybe Weapon)
-getWeapon gameMode = makeFrom (weaponsIn gameMode)
+getWeapon :: GameMode -> String -> Either String Weapon
+getWeapon gameMode input = case makeFrom (weaponsIn gameMode) input of
+  Just wpn -> Right wpn
+  Nothing  -> Left "Invalid weapon!"
 
 weaponsIn :: GameMode -> [Weapon]
 weaponsIn RPSLS = (take 3 allElems) ++ (reverse . take 2 . reverse $ allElems)

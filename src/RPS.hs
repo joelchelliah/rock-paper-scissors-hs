@@ -14,21 +14,21 @@ play :: Score -> IO ()
 play score = do
   Print.modeSelection
 
-  maybeGameMode <- getGameMode <$> getLine
+  gmFromInput <- getGameMode <$> getLine
 
-  case maybeGameMode of
-    Nothing -> restart "Invalid game mode!" score
-    (Just gm) -> do
-      gameMode <- if gm == RANDOM then genGameMode else return gm
+  case gmFromInput of
+    Left  errorMsg -> restart errorMsg score
+    Right gameMode -> do
+      gm <- if gameMode == RANDOM then genGameMode else return gameMode
 
-      Print.weaponsSelection gameMode
+      Print.weaponsSelection gm
 
-      maybeYourWeapon <- getWeapon gameMode <$> getLine
-      opponentsWeapon <- genWeapon gameMode
+      maybeYourWeapon <- getWeapon gm <$> getLine
+      opponentsWeapon <- genWeapon gm
 
       case maybeYourWeapon of
-        Nothing -> restart "Invalid weapon!" score
-        (Just yourWeapon) -> do
+        Left  errorMsg   -> restart errorMsg score
+        Right yourWeapon -> do
           let outcome  = yourWeapon `compare` opponentsWeapon
               newScore = updateScore outcome score
 

@@ -30,8 +30,10 @@ instance Show GameMode where
 instance RpsElement GameMode
 
 
-getGameMode :: String -> Maybe GameMode
-getGameMode = make
+getGameMode :: String -> Either String GameMode
+getGameMode input = case make input of
+  Just gameMode -> Right gameMode
+  Nothing       -> Left "Invalid game mode!"
 
 genGameMode :: IO GameMode
 genGameMode = genFrom (minBound, pred maxBound)
