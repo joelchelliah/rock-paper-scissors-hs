@@ -29,6 +29,7 @@ executable rps
 test-suite rps-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
+  other-modules:     GameModesSpec, ScoreBoardSpec, WeaponsSpec
   main-is:             Spec.hs
   build-depends:       base, rock-paper-scissors-hs, QuickCheck, hspec
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
