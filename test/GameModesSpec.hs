@@ -12,10 +12,18 @@ instance Arbitrary Input where
     i <- choose (0, 10)
     return . Input . show $ (i :: Int)
 
+gameModes = [RPS, RPSLS, RPS_7, RANDOM]
+
 
 spec :: IO ()
 spec = hspec $ do
   describe "GameModes" $ do
+
     describe "getGameMode" $ do
-      it "gets the game mode for given input" $ do
-        pending
+     let validInput = (`elem` (show <$> [1 .. length gameModes]))
+         expectedGameMode = (gameModes !!) . subtract 1 . read
+
+     it "gets the game mode for given input" $ property $
+       \(Input i) -> if validInput i
+                     then getGameMode i == Just (expectedGameMode i)
+                     else getGameMode i == Nothing

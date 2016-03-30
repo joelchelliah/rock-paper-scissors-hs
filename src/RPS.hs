@@ -1,7 +1,7 @@
 module RPS(runRps) where
 
-import GameModes(getGameMode)
-import Weapons(Weapon, getWeapon, genWeapon)
+import GameModes(GameMode(RANDOM), getGameMode, genGameMode)
+import Weapons(getWeapon, genWeapon)
 import qualified Printer as Print
 import ScoreBoard
 
@@ -14,11 +14,13 @@ play :: Score -> IO ()
 play score = do
   Print.modeSelection
 
-  maybeGameMode <- getGameMode
+  maybeGameMode <- getGameMode <$> getLine
 
   case maybeGameMode of
     Nothing -> restart "Invalid game mode!" score
-    (Just gameMode) -> do
+    (Just gm) -> do
+      gameMode <- if gm == RANDOM then genGameMode else return gm
+
       Print.weaponsSelection gameMode
 
       maybeYourWeapon <- getWeapon gameMode <$> getLine

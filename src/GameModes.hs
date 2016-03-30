@@ -30,13 +30,8 @@ instance Show GameMode where
 instance RpsElement GameMode
 
 
-getGameMode :: IO (Maybe GameMode)
-getGameMode = do
-  gm <- make <$> getLine
-  
-  case gm of 
-    (Just RANDOM) -> Just <$> genGameMode
-    _             -> return gm
+getGameMode :: String -> Maybe GameMode
+getGameMode = make
 
 genGameMode :: IO GameMode
 genGameMode = genFrom (minBound, pred maxBound)
