@@ -1,5 +1,5 @@
-module Printer(header, footer, modeSelection, 
-               weaponsSelection, battleSequence, 
+module Printer(header, footer, modeSelection,
+               weaponsSelection, battleSequence,
                score) where
 
 import GameModes(GameMode, gameModeNames)
@@ -18,16 +18,16 @@ footer :: IO ()
 footer = printText ["- Game over -"]
 
 modeSelection :: IO ()
-modeSelection = let formatted = indent <$> padRight <$> gameModeNames
+modeSelection = let formatted = indent . padRight <$> gameModeNames
                 in printText $ "- Choose a game mode -"
                              : divider
                              : formatted
 
 weaponsSelection :: GameMode -> IO ()
-weaponsSelection gameMode = let numberWpn = \wpn num -> show num ++ ". " ++ show wpn
+weaponsSelection gameMode = let numberWeapon wpn num = show num ++ ". " ++ show wpn
                                 weapons   = weaponsIn gameMode
-                                numbered  = zipWith numberWpn weapons [1..]
-                                formatted = indent <$> padRight <$> numbered
+                                numbered  = zipWith numberWeapon weapons [1..]
+                                formatted = indent . padRight <$> numbered
                             in printText $ ("<> " ++ show gameMode ++ " <>")
                                          : divider
                                          : "- Choose your weapon -"
@@ -35,8 +35,8 @@ weaponsSelection gameMode = let numberWpn = \wpn num -> show num ++ ". " ++ show
                                          : formatted
 
 battleSequence :: Weapon -> Weapon -> Ordering -> IO ()
-battleSequence w1 w2 outcome = printText [("You pick:         " ++ show w1 ++ "!"),
-                                          ("Your enemy picks: " ++ show w2 ++ "!"),
+battleSequence w1 w2 outcome = printText ["You pick:         " ++ show w1 ++ "!",
+                                          "Your enemy picks: " ++ show w2 ++ "!",
                                            divider, divider,
                                            getReaction w1 w2,
                                            eval outcome]
@@ -73,7 +73,7 @@ indent :: String -> String
 indent = ("  " ++)
 
 divider :: String
-divider = concat $ map (\_ -> " -") [1 .. gameWidth `div` 2]
+divider = concatMap (const " -") [1 .. gameWidth `div` 2]
 
 gameWidth :: Int
 gameWidth = 50

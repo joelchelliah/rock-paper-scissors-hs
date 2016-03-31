@@ -1,4 +1,4 @@
-module GameModes(GameMode(..), 
+module GameModes(GameMode(..),
              getGameMode,
              genGameMode,
              gameModeNames) where
@@ -6,7 +6,7 @@ module GameModes(GameMode(..),
 import System.Random
 import RpsElements
 
-data GameMode = RPS 
+data GameMode = RPS
               | RPSLS
               | RPS_7
               | RANDOM
@@ -18,7 +18,7 @@ instance Random GameMode where
                  (r, g') = randomR (fromEnum min, fromEnum max) g
              in (toEnum r, g')
 
-  randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g 
+  randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g
                         in  (toEnum r, g')
 
 instance Show GameMode where

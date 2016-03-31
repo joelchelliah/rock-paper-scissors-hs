@@ -1,13 +1,14 @@
-module RPS(runRps) where
+module RPS(rps) where
 
+import Control.Monad(when)
 import GameModes(GameMode(RANDOM), getGameMode, genGameMode)
 import Weapons(getWeapon, genWeapon)
 import qualified Printer as Print
 import ScoreBoard
 
-runRps = Print.header 
-      >> play initScore
-      >> Print.footer
+rps = Print.header
+    >> play initScore
+    >> Print.footer
 
 
 play :: Score -> IO ()
@@ -38,11 +39,9 @@ play score = do
           getLine >>= retry newScore
 
 retry :: Score -> String -> IO ()
-retry score ans = if ans == "y"
-                  then play score
-                  else return ()
+retry score ans = when (ans == "y") $ play score
 
 restart :: String -> Score -> IO ()
-restart reason score = do 
+restart reason score = do
   putStrLn $ reason ++ " ... Try again"
   play score

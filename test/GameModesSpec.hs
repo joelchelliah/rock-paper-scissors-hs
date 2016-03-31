@@ -16,8 +16,8 @@ gameModes = [RPS, RPSLS, RPS_7, RANDOM]
 
 
 spec :: IO ()
-spec = hspec $ do
-  describe "GameModes" $ do
+spec = hspec $
+  describe "GameModes" $
 
     describe "getGameMode" $ do
      let validInput = (`elem` (show <$> [1 .. length gameModes]))
@@ -26,4 +26,4 @@ spec = hspec $ do
      it "gets the game mode for given input" $ property $
        \(Input i) -> if validInput i
                      then getGameMode i == Right (expectedGameMode i)
-                     else getGameMode i == Left  ( "Invalid game mode!" )
+                     else getGameMode i == Left  "Invalid game mode!"

@@ -5,8 +5,8 @@ import Test.QuickCheck
 import ScoreBoard
 
 spec :: IO ()
-spec = hspec $ do
-  describe "ScoreBoard" $ do
+spec = hspec $
+  describe "ScoreBoard" $
     describe "initScore" $ do
       it "creates an empty score board" $ do
         pending

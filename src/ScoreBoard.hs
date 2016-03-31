@@ -6,9 +6,9 @@ instance Show Score where
   show (Score (wins, ties, loss)) = let wrap result = "[ " ++ result ++ " ] "
                                         display 1 s = wrap $ show 1 ++ " " ++ (head . words) s
                                         display p s = wrap $ show p ++ " " ++ (last . words) s
-                                    in (display wins "win wins")
-                                    ++ (display ties "tie ties")
-                                    ++ (display loss "loss losses")
+                                    in display wins "win wins"
+                                    ++ display ties "tie ties"
+                                    ++ display loss "loss losses"
 
 instance Monoid Score where
   mempty = Score (0, 0, 0)

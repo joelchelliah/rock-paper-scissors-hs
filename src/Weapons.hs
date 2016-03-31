@@ -33,7 +33,7 @@ instance Ord Weapon where
 
   Fire `compare` Sponge = GT
   Fire `compare` Rock   = LT
-  
+
   Sponge `compare` Air       = GT
   Sponge `compare` Water     = GT
   Sponge `compare` Rock      = LT
@@ -65,26 +65,26 @@ instance Random Weapon where
                  (r, g') = randomR (min, max) g
               in (toEnum r, g')
 
-  randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g 
+  randomR (min,max) g = let (r, g') = randomR (fromEnum min, fromEnum max) g
                         in  (toEnum r, g')
 
 instance RpsElement Weapon
 
 genWeapon :: GameMode -> IO Weapon
 genWeapon gameMode = do
-  let max = (subtract 1) . numWeapons $ gameMode
+  let max = subtract 1 . numWeapons $ gameMode
       wps = weaponsIn gameMode
       gen = (wps !!) . fst . randomR (0, max)
 
   newStdGen >> gen <$> getStdGen
-  
+
 getWeapon :: GameMode -> String -> Either String Weapon
 getWeapon gameMode input = case makeFrom (weaponsIn gameMode) input of
   Just wpn -> Right wpn
   Nothing  -> Left "Invalid weapon!"
 
 weaponsIn :: GameMode -> [Weapon]
-weaponsIn RPSLS = (take 3 allElems) ++ (reverse . take 2 . reverse $ allElems)
+weaponsIn RPSLS = take 3 allElems ++ (reverse . take 2 . reverse $ allElems)
 weaponsIn gameMode = take (numWeapons gameMode) allElems
 
 

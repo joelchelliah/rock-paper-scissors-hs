@@ -17,14 +17,14 @@ type GetWeaponFunc  = (Input -> Either String Weapon)
 type ExpectedWeapon = (Input -> Weapon)
 
 
-get_weapon_prop :: IsValidInput -> GetWeaponFunc -> ExpectedWeapon -> Input -> Bool
-get_weapon_prop isValid getWeaponFunc expectedWeapon i
+getWeaponProp :: IsValidInput -> GetWeaponFunc -> ExpectedWeapon -> Input -> Bool
+getWeaponProp isValid getWeaponFunc expectedWeapon i
   | isValid i = getWeaponFunc i == Right (expectedWeapon i)
-  | otherwise = getWeaponFunc i == Left  ("Invalid weapon!")
+  | otherwise = getWeaponFunc i == Left  "Invalid weapon!"
 
 
 spec :: IO ()
-spec = hspec $ do
+spec = hspec $
   describe "Weapons" $ do
     let rpsWeapons   = [Rock, Paper, Scissors]
         rpslsWeapons = [Rock, Paper, Scissors, Lizard, Spock]
@@ -41,7 +41,7 @@ spec = hspec $ do
             expectedWeapon = expectedFrom rpsWeapons
 
         it "gets a weapon based on given input" $ property $
-          get_weapon_prop validInputFunc getWeaponFunc expectedWeapon
+          getWeaponProp validInputFunc getWeaponFunc expectedWeapon
 
       context "when the game mode is Rock-paper-scissors-lizard-spock" $ do
         let validInputFunc = validInputFor rpslsWeapons
@@ -49,7 +49,7 @@ spec = hspec $ do
             expectedWeapon = expectedFrom rpslsWeapons
 
         it "gets a weapon based on given input" $ property $
-          get_weapon_prop validInputFunc getWeaponFunc expectedWeapon
+          getWeaponProp validInputFunc getWeaponFunc expectedWeapon
 
       context "when the game mode is RPS-7" $ do
         let validInputFunc = validInputFor rps7Weapons
@@ -57,7 +57,7 @@ spec = hspec $ do
             expectedWeapon = expectedFrom rps7Weapons
 
         it "gets a weapon based on given input" $ property $
-          get_weapon_prop validInputFunc getWeaponFunc expectedWeapon
+          getWeaponProp validInputFunc getWeaponFunc expectedWeapon
 
     describe "genWeapon" $ do
       it "generates a random weapon for Standard RPS" $ do
@@ -73,11 +73,11 @@ spec = hspec $ do
         weapon `shouldSatisfy` (`elem` rps7Weapons)
 
     describe "weaponsIn" $ do
-      it "provides all available weapons for Standard RPS" $ do
+      it "provides all available weapons for Standard RPS" $
         weaponsIn RPS `shouldBe` rpsWeapons
 
-      it "provides all available weapons for Rock-paper-scissors-lizard-spock" $ do
+      it "provides all available weapons for Rock-paper-scissors-lizard-spock" $
         weaponsIn RPSLS `shouldBe` rpslsWeapons
 
-      it "provides all available weapons for RPS-7" $ do
+      it "provides all available weapons for RPS-7" $
         weaponsIn RPS_7 `shouldBe` rps7Weapons

@@ -1,7 +1,7 @@
 module Reactions(getReaction) where
 
 import Data.Generics.Aliases(orElse)
-import Data.Maybe(fromMaybe)
+import Data.Maybe(maybe)
 import Data.Char(toUpper)
 import Data.List(find)
 import Weapons
@@ -19,7 +19,7 @@ getReaction :: Weapon -> Weapon -> String
 getReaction w1 w2 = let m1 (Reaction s _ v) = w1 == s && w2 == v
                         m2 (Reaction s _ v) = w1 == v && w2 == s
                         maybeFoundReaction  = find m1 reactions `orElse` find m2 reactions
-                    in fromMaybe ". . ." . fmap show $ maybeFoundReaction
+                    in maybe ". . ." show maybeFoundReaction
 
 reactions :: [Reaction]
 reactions = concat [makeReactions Rock     "crushes"       [Scissors, Sponge, Lizard],
