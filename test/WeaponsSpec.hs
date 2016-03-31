@@ -12,18 +12,13 @@ instance Arbitrary Input where
     i <- choose (0, 50)
     return . Input . show $ (i :: Int)
 
-
-type IsValidInput   = (String -> Bool)
-type GetWeaponFunc  = (String -> Either String Weapon)
-type ExpectedWeapon = (String -> Weapon)
-
-rpsWeapons   = [Rock, Paper, Scissors]
-rpslsWeapons = [Rock, Paper, Scissors, Lizard, Spock]
-rps7Weapons  = [Rock, Paper, Scissors, Fire, Sponge, Air, Water]
+type IsValidInput   = (Input -> Bool)
+type GetWeaponFunc  = (Input -> Either String Weapon)
+type ExpectedWeapon = (Input -> Weapon)
 
 
-get_weapon_prop :: Input -> IsValidInput -> GetWeaponFunc -> ExpectedWeapon -> Bool
-get_weapon_prop (Input i) isValid getWeaponFunc expectedWeapon
+get_weapon_prop :: IsValidInput -> GetWeaponFunc -> ExpectedWeapon -> Input -> Bool
+get_weapon_prop isValid getWeaponFunc expectedWeapon i
   | isValid i = getWeaponFunc i == Right (expectedWeapon i)
   | otherwise = getWeaponFunc i == Left  ("Invalid weapon!")
 
@@ -31,32 +26,38 @@ get_weapon_prop (Input i) isValid getWeaponFunc expectedWeapon
 spec :: IO ()
 spec = hspec $ do
   describe "Weapons" $ do
+    let rpsWeapons   = [Rock, Paper, Scissors]
+        rpslsWeapons = [Rock, Paper, Scissors, Lizard, Spock]
+        rps7Weapons  = [Rock, Paper, Scissors, Fire, Sponge, Air, Water]
+
     describe "getWeapon" $ do
-      let validInput weapons = (`elem` (show <$> [1 .. length weapons]))
+      let validInputFor weapons = (`elem` (show <$> [1 .. length weapons])) . toStr
+          weaponForGameMode gm  = getWeapon gm . toStr
+          expectedFrom weapons  = (weapons !!) . subtract 1 . read . toStr
 
       context "when the game mode is Standard RPS" $ do
-        let getWeaponFunc  = getWeapon RPS
-            validInputFunc = validInput rpsWeapons
-            expectedWeapon = (rpsWeapons !!) . subtract 1 . read
+        let validInputFunc = validInputFor rpsWeapons
+            getWeaponFunc  = weaponForGameMode RPS
+            expectedWeapon = expectedFrom rpsWeapons
 
         it "gets a weapon based on given input" $ property $
-          \i -> get_weapon_prop i validInputFunc getWeaponFunc expectedWeapon
+          get_weapon_prop validInputFunc getWeaponFunc expectedWeapon
 
       context "when the game mode is Rock-paper-scissors-lizard-spock" $ do
-        let getWeaponFunc  = getWeapon RPSLS
-            validInputFunc = validInput rpslsWeapons
-            expectedWeapon = (rpslsWeapons !!) . subtract 1 . read
+        let validInputFunc = validInputFor rpslsWeapons
+            getWeaponFunc  = weaponForGameMode RPSLS
+            expectedWeapon = expectedFrom rpslsWeapons
 
         it "gets a weapon based on given input" $ property $
-          \i -> get_weapon_prop i validInputFunc getWeaponFunc expectedWeapon
+          get_weapon_prop validInputFunc getWeaponFunc expectedWeapon
 
       context "when the game mode is RPS-7" $ do
-        let getWeaponFunc  = getWeapon RPS_7
-            validInputFunc = validInput rps7Weapons
-            expectedWeapon = (rps7Weapons !!) . subtract 1 . read
+        let validInputFunc = validInputFor rps7Weapons
+            getWeaponFunc  = weaponForGameMode RPS_7
+            expectedWeapon = expectedFrom rps7Weapons
 
         it "gets a weapon based on given input" $ property $
-          \i -> get_weapon_prop i validInputFunc getWeaponFunc expectedWeapon
+          get_weapon_prop validInputFunc getWeaponFunc expectedWeapon
 
     describe "genWeapon" $ do
       it "generates a random weapon for Standard RPS" $ do
