@@ -2,6 +2,7 @@ module WeaponsSpec(spec) where
 
 import Test.Hspec
 import Test.QuickCheck
+import Data.List((\\))
 import GameModes
 import Weapons
 
@@ -29,6 +30,7 @@ spec = hspec $
     let rpsWeapons   = [Rock, Paper, Scissors]
         rpslsWeapons = [Rock, Paper, Scissors, Lizard, Spock]
         rps7Weapons  = [Rock, Paper, Scissors, Fire, Sponge, Air, Water]
+        allWeapons   = [minBound .. maxBound]
 
     describe "getWeapon" $ do
       let validInputFor weapons = (`elem` (show <$> [1 .. length weapons])) . toStr
@@ -60,17 +62,45 @@ spec = hspec $
           getWeaponProp validInputFunc getWeaponFunc expectedWeapon
 
     describe "genWeapon" $ do
-      it "generates a random weapon for Standard RPS" $ do
-        weapon <- genWeapon RPS
-        weapon `shouldSatisfy` (`elem` rpsWeapons)
 
-      it "generates a random weapon for Rock-paper-scissors-lizard-spock" $ do
-        weapon <- genWeapon RPSLS
-        weapon `shouldSatisfy` (`elem` rpslsWeapons)
+      context "when the game mode is Standard RPS" $ do
+        let gameMode = RPS
+            validWeapons = rpsWeapons
+            invalidWeapons = allWeapons \\ rpsWeapons
 
-      it "generates a random weapon for RPS-7" $ do
-        weapon <- genWeapon RPS_7
-        weapon `shouldSatisfy` (`elem` rps7Weapons)
+        it "generates a random weapon" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` (`elem` validWeapons)
+
+        it "does not generate a weapon from another game mode" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` not . (`elem` invalidWeapons)
+
+      context "when the game mode is Rock-paper-scissors-lizard-spock" $ do
+        let gameMode = RPSLS
+            validWeapons = rpslsWeapons
+            invalidWeapons = allWeapons \\ rpslsWeapons
+
+        it "generates a random weapon" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` (`elem` validWeapons)
+
+        it "does not generate a weapon from another game mode" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` not . (`elem` invalidWeapons)
+
+      context "when the game mode is Standard RPS-7" $ do
+        let gameMode = RPS_7
+            validWeapons = rps7Weapons
+            invalidWeapons = allWeapons \\ rps7Weapons
+
+        it "generates a random weapon" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` (`elem` validWeapons)
+
+        it "does not generate a weapon from another game mode" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` not . (`elem` invalidWeapons)
 
     describe "weaponsIn" $ do
       it "provides all available weapons for Standard RPS" $
