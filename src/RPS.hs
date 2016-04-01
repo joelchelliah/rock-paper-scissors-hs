@@ -1,10 +1,10 @@
 module RPS(rps) where
 
-import Control.Monad(when)
-import GameModes(GameMode(RANDOM), getGameMode, genGameMode)
-import Weapons(getWeapon, genWeapon)
-import qualified Printer as Print
-import ScoreBoard
+import           Control.Monad (when)
+import           GameModes     (GameMode (RANDOM), genGameMode, getGameMode)
+import           ScoreBoard
+import           Weapons       (genWeapon, getWeapon)
+import qualified Printer       as Print
 
 rps = Print.header
     >> play initScore

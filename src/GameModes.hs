@@ -1,10 +1,7 @@
-module GameModes(GameMode(..),
-             getGameMode,
-             genGameMode,
-             gameModeNames) where
+module GameModes(GameMode(..), getGameMode, genGameMode, gameModeNames) where
 
-import System.Random
-import RpsElements
+import           RpsElements
+import           System.Random
 
 data GameMode = RPS
               | RPSLS

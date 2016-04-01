@@ -1,6 +1,6 @@
 module RpsElements where
 
-import System.Random
+import           System.Random
 
 class (Eq r, Enum r, Bounded r, Random r) => RpsElement r where
   make :: String -> Maybe r

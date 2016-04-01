@@ -1,11 +1,10 @@
-module Printer(header, footer, modeSelection,
-               weaponsSelection, battleSequence,
+module Printer(header, footer, modeSelection, weaponsSelection, battleSequence,
                score) where
 
-import GameModes(GameMode, gameModeNames)
-import Weapons(Weapon, weaponsIn)
-import Reactions(getReaction)
-import ScoreBoard(Score)
+import           GameModes  (GameMode, gameModeNames)
+import           Reactions  (getReaction)
+import           ScoreBoard (Score)
+import           Weapons    (Weapon, weaponsIn)
 
 header :: IO ()
 header = printText ["########  ########   ####### ",

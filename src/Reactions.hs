@@ -1,10 +1,10 @@
 module Reactions(getReaction) where
 
-import Data.Generics.Aliases(orElse)
-import Data.Maybe(maybe)
-import Data.Char(toUpper)
-import Data.List(find)
-import Weapons
+import           Data.Char             (toUpper)
+import           Data.Generics.Aliases (orElse)
+import           Data.List             (find)
+import           Data.Maybe            (maybe)
+import           Weapons
 
 data Reaction = Reaction { subject :: Weapon, verb :: String, object :: Weapon }
 

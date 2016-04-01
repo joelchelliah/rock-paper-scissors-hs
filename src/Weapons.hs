@@ -1,8 +1,8 @@
 module Weapons (Weapon(..), genWeapon, getWeapon, weaponsIn) where
 
-import System.Random
-import RpsElements
-import GameModes
+import           GameModes
+import           RpsElements
+import           System.Random
 
 data Weapon = Rock
             | Paper
@@ -14,7 +14,6 @@ data Weapon = Rock
             | Lizard
             | Spock
             deriving (Eq, Show, Enum, Bounded)
-
 
 instance Ord Weapon where
   Rock `compare` Scissors = GT
