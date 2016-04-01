@@ -10,6 +10,7 @@ instance Eq Score where
 spec :: IO ()
 spec = hspec $
   describe "ScoreBoard" $ do
+    
     describe "initScore" $
       it "creates an empty score board" $
         initScore `shouldBe` Score (0,0,0)
