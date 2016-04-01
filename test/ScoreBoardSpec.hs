@@ -10,7 +10,7 @@ instance Eq Score where
 spec :: IO ()
 spec = hspec $
   describe "ScoreBoard" $ do
-    
+
     describe "initScore" $
       it "creates an empty score board" $
         initScore `shouldBe` Score (0,0,0)
@@ -19,10 +19,10 @@ spec = hspec $
       let score = Score (0,0,0)
 
       it "updates the score board with a win" $
-        updateScore LT score `shouldBe` Score (1,0,0)
+        updateScore GT score `shouldBe` Score (1,0,0)
 
       it "updates the score board with a tie" $
         updateScore EQ score `shouldBe` Score (0,1,0)
 
       it "updates the score board with a loss" $
-        updateScore GT score `shouldBe` Score (0,0,1)
+        updateScore LT score `shouldBe` Score (0,0,1)

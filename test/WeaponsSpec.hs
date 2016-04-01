@@ -30,6 +30,7 @@ spec = hspec $
     let rpsWeapons   = [Rock, Paper, Scissors]
         rpslsWeapons = [Rock, Paper, Scissors, Lizard, Spock]
         rps7Weapons  = [Rock, Paper, Scissors, Fire, Sponge, Air, Water]
+        rps9Weapons  = [Rock, Paper, Scissors, Fire, Sponge, Air, Water, Human, Gun]
         allWeapons   = [minBound .. maxBound]
 
     describe "getWeapon" $ do
@@ -61,8 +62,15 @@ spec = hspec $
         it "gets a weapon based on given input" $ property $
           getWeaponProp validInputFunc getWeaponFunc expectedWeapon
 
-    describe "genWeapon" $ do
+      context "when the game mode is RPS-9" $ do
+        let validInputFunc = validInputFor rps9Weapons
+            getWeaponFunc  = weaponForGameMode RPS_9
+            expectedWeapon = expectedFrom rps9Weapons
 
+        it "gets a weapon based on given input" $ property $
+          getWeaponProp validInputFunc getWeaponFunc expectedWeapon
+
+    describe "genWeapon" $ do
       context "when the game mode is Standard RPS" $ do
         let gameMode = RPS
             validWeapons = rpsWeapons
@@ -89,10 +97,23 @@ spec = hspec $
           weapon <- genWeapon gameMode
           weapon `shouldSatisfy` not . (`elem` invalidWeapons)
 
-      context "when the game mode is Standard RPS-7" $ do
+      context "when the game mode is RPS-7" $ do
         let gameMode = RPS_7
             validWeapons = rps7Weapons
             invalidWeapons = allWeapons \\ rps7Weapons
+
+        it "generates a random weapon" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` (`elem` validWeapons)
+
+        it "does not generate a weapon from another game mode" $ do
+          weapon <- genWeapon gameMode
+          weapon `shouldSatisfy` not . (`elem` invalidWeapons)
+
+      context "when the game mode is RPS-9" $ do
+        let gameMode = RPS_9
+            validWeapons = rps9Weapons
+            invalidWeapons = allWeapons \\ rps9Weapons
 
         it "generates a random weapon" $ do
           weapon <- genWeapon gameMode
@@ -111,3 +132,6 @@ spec = hspec $
 
       it "provides all available weapons for RPS-7" $
         weaponsIn RPS_7 `shouldBe` rps7Weapons
+
+      it "provides all available weapons for RPS-9" $
+        weaponsIn RPS_9 `shouldBe` rps9Weapons

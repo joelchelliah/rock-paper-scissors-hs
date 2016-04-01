@@ -11,6 +11,8 @@ data Weapon = Rock
             | Sponge
             | Air
             | Water
+            | Human
+            | Gun
             | Lizard
             | Spock
             deriving (Eq, Show, Enum, Bounded)
@@ -20,39 +22,55 @@ instance Ord Weapon where
   Rock `compare` Fire     = GT
   Rock `compare` Sponge   = GT
   Rock `compare` Lizard   = GT
+  Rock `compare` Human    = GT
 
   Paper `compare` Air   = GT
   Paper `compare` Water = GT
   Paper `compare` Spock = GT
+  Paper `compare` Gun   = GT
 
   Scissors `compare` Sponge = GT
   Scissors `compare` Air    = GT
   Scissors `compare` Lizard = GT
+  Scissors `compare` Human  = GT
   Scissors `compare` Rock   = LT
 
   Fire `compare` Sponge = GT
+  Fire `compare` Human  = GT
   Fire `compare` Rock   = LT
 
   Sponge `compare` Air       = GT
   Sponge `compare` Water     = GT
+  Sponge `compare` Gun       = GT
   Sponge `compare` Rock      = LT
   Sponge `compare` Fire      = LT
   Sponge `compare` Scissors  = LT
 
   Air `compare` Water       = GT
+  Air `compare` Gun         = GT
   Air `compare` Scissors    = LT
   Air `compare` Sponge      = LT
   Air `compare` Paper       = LT
 
+  Water `compare` Gun    = GT
   Water `compare` Sponge = LT
   Water `compare` Paper  = LT
   Water `compare` Air    = LT
+
+  Human `compare` Rock     = LT
+  Human `compare` Fire     = LT
+  Human `compare` Scissors = LT
+
+  Gun `compare` Sponge = LT
+  Gun `compare` Paper  = LT
+  Gun `compare` Air    = LT
+  Gun `compare` Water  = LT
 
   Lizard `compare` Spock    = GT
   Lizard `compare` Rock     = LT
   Lizard `compare` Scissors = LT
 
-  Spock `compare` Paper = LT
+  Spock `compare` Paper  = LT
   Spock `compare` Lizard = LT
 
   x `compare` y = fromEnum x `compare` fromEnum y
@@ -91,3 +109,4 @@ numWeapons :: GameMode -> Int
 numWeapons RPS = 3
 numWeapons RPSLS = 5
 numWeapons RPS_7 = 7
+numWeapons RPS_9 = 9

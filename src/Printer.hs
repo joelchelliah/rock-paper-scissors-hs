@@ -49,9 +49,9 @@ score s = printText $ "- Current score -"
 
 
 eval :: Ordering -> String
-eval LT = "YOU WIN!"
+eval GT = "YOU WIN!"
 eval EQ = "IT'S A TIE!"
-eval GT = "YOU LOSE!"
+eval LT = "YOU LOSE!"
 
 printText :: [String] -> IO ()
 printText txt = let dividers  = [divider, divider]

@@ -22,27 +22,40 @@ getReaction w1 w2 = let m1 (Reaction s _ v) = w1 == s && w2 == v
                     in maybe ". . ." show maybeFoundReaction
 
 reactions :: [Reaction]
-reactions = concat [makeReactions Rock     "crushes"       [Scissors, Sponge, Lizard],
+reactions = concat [makeReactions Rock     "crushes"       [Scissors, Sponge, Human, Lizard],
                     makeReactions Rock     "pounds out"    [Fire],
                     makeReactions Paper    "covers"        [Rock],
                     makeReactions Paper    "fans"          [Air],
                     makeReactions Paper    "floats on"     [Water],
                     makeReactions Paper    "disproves"     [Spock],
+                    makeReactions Paper    "outlaws"       [Gun],
                     makeReactions Scissors "cut"           [Paper, Sponge],
                     makeReactions Scissors "swish through" [Air],
                     makeReactions Scissors "decapitate"    [Lizard],
                     makeReactions Fire     "melts"         [Scissors],
-                    makeReactions Fire     "burns"         [Paper, Sponge],
+                    makeReactions Fire     "burns"         [Paper, Human, Sponge],
                     makeReactions Sponge   "soaks"         [Paper],
                     makeReactions Sponge   "absorbs"       [Air, Water],
+                    makeReactions Sponge   "cleans"        [Gun],
                     makeReactions Air      "blows out"     [Fire],
                     makeReactions Air      "erodes"        [Rock],
                     makeReactions Air      "evaporates"    [Water],
+                    makeReactions Air      "tarnishes"     [Gun],
                     makeReactions Water    "erodes"        [Rock],
                     makeReactions Water    "puts out"      [Fire],
-                    makeReactions Water    "rusts"         [Scissors],
+                    makeReactions Water    "rusts"         [Scissors, Gun],
+                    makeReactions Human    "cleans with"   [Sponge],
+                    makeReactions Human    "writes on"     [Paper],
+                    makeReactions Human    "breathes"      [Air],
+                    makeReactions Human    "drinks"        [Water],
+                    makeReactions Gun      "targets"       [Rock],
+                    makeReactions Gun      "fires"         [Fire],
+                    makeReactions Gun      "outclasses"    [Scissors],
+                    makeReactions Gun      "shoots"        [Human],
                     makeReactions Lizard   "poisons"       [Spock],
-                    makeReactions Lizard   "eats"          [Paper]
+                    makeReactions Lizard   "eats"          [Paper],
+                    makeReactions Spock    "smashes"       [Scissors],
+                    makeReactions Spock    "vaporizes"     [Rock]
                    ]
 
 makeReactions :: Weapon -> String -> [Weapon] -> [Reaction]

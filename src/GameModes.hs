@@ -6,6 +6,7 @@ import           System.Random
 data GameMode = RPS
               | RPSLS
               | RPS_7
+              | RPS_9
               | RANDOM
               deriving (Eq, Enum, Bounded)
 
@@ -22,6 +23,7 @@ instance Show GameMode where
   show RPS    = "Standard RPS"
   show RPSLS  = "Rock-Paper-Scissors-Lizard-Spock"
   show RPS_7  = "RPS-7"
+  show RPS_9  = "RPS-9"
   show RANDOM = "Random"
 
 instance RpsElement GameMode

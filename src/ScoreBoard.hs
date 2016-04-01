@@ -19,6 +19,6 @@ initScore :: Score
 initScore = mempty
 
 updateScore :: Ordering -> Score -> Score
-updateScore LT = mappend $ Score (1, 0, 0)
+updateScore GT = mappend $ Score (1, 0, 0)
 updateScore EQ = mappend $ Score (0, 1, 0)
-updateScore GT = mappend $ Score (0, 0, 1)
+updateScore LT = mappend $ Score (0, 0, 1)

@@ -49,4 +49,5 @@ spec = hspec $
         gameModeNames `shouldBe` ["1. Standard RPS",
                                   "2. Rock-Paper-Scissors-Lizard-Spock",
                                   "3. RPS-7",
-                                  "4. Random"]
+                                  "4. RPS-9",
+                                  "5. Random"]

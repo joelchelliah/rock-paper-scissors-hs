@@ -1,7 +1,7 @@
 module RPS(rps) where
 
 import           Control.Monad (when)
-import           GameModes     (GameMode (RANDOM), genGameMode, getGameMode)
+import           GameModes     (GameMode(RANDOM), genGameMode, getGameMode)
 import           ScoreBoard
 import           Weapons       (genWeapon, getWeapon)
 import qualified Printer       as Print
