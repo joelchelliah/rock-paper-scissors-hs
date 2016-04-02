@@ -1,8 +1,8 @@
 module ScoreBoardSpec(spec) where
 
-import Test.Hspec
-import Test.QuickCheck
-import ScoreBoard
+import           ScoreBoard
+import           Test.Hspec
+import           Test.QuickCheck
 
 instance Eq Score where
   (Score s1) == (Score s2) = s1 == s2
@@ -13,16 +13,16 @@ spec = hspec $
 
     describe "initScore" $
       it "creates an empty score board" $
-        initScore `shouldBe` Score (0,0,0)
+        initScore `shouldBe` [mempty]
 
     describe "updateScore" $ do
-      let score = Score (0,0,0)
+      let scoreBoard = [Score (5,5,5)]
 
       it "updates the score board with a win" $
-        updateScore GT score `shouldBe` Score (1,0,0)
+        updateScore GT scoreBoard `shouldBe` Score (6,5,5) : scoreBoard
 
       it "updates the score board with a tie" $
-        updateScore EQ score `shouldBe` Score (0,1,0)
+        updateScore EQ scoreBoard `shouldBe` Score (5,6,5) : scoreBoard
 
       it "updates the score board with a loss" $
-        updateScore LT score `shouldBe` Score (0,0,1)
+        updateScore LT scoreBoard `shouldBe` Score (5,5,6) : scoreBoard

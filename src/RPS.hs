@@ -1,24 +1,25 @@
 module RPS(rps) where
 
-import           Control.Monad (when)
 import           GameModes     (GameMode(RANDOM), genGameMode, getGameMode)
-import           ScoreBoard
 import           Weapons       (genWeapon, getWeapon)
 import qualified Printer       as Print
+import           ScoreBoard    (ScoreBoard, initScore, updateScore, getScore)
 
+rps :: IO ()
 rps = Print.header
-    >> play initScore
-    >> Print.footer
+   >> play initScore
+  >>= Print.scoreLog
+   >> Print.footer
 
 
-play :: Score -> IO ()
-play score = do
+play :: ScoreBoard -> IO ScoreBoard
+play scoreBoard = do
   Print.modeSelection
 
   gmFromInput <- getGameMode <$> getLine
 
   case gmFromInput of
-    Left  errorMsg -> restart errorMsg score
+    Left  errorMsg -> restart scoreBoard errorMsg
     Right gameMode -> do
       gm <- if gameMode == RANDOM then genGameMode else return gameMode
 
@@ -28,20 +29,22 @@ play score = do
       opponentsWeapon <- genWeapon gm
 
       case maybeYourWeapon of
-        Left  errorMsg   -> restart errorMsg score
+        Left  errorMsg   -> restart scoreBoard errorMsg
         Right yourWeapon -> do
           let outcome  = yourWeapon `compare` opponentsWeapon
-              newScore = updateScore outcome score
+              newBoard = updateScore outcome scoreBoard
 
           Print.battleSequence yourWeapon opponentsWeapon outcome
-          Print.score newScore
+          Print.score $ getScore newBoard
 
-          getLine >>= retry newScore
+          getLine >>= retry newBoard
 
-retry :: Score -> String -> IO ()
-retry score ans = when (ans == "y") $ play score
+retry :: ScoreBoard -> String -> IO ScoreBoard
+retry scoreBoard ans = if ans == "y"
+                       then play scoreBoard
+                       else return scoreBoard
 
-restart :: String -> Score -> IO ()
-restart reason score = do
-  putStrLn $ reason ++ " ... Try again"
-  play score
+restart :: ScoreBoard -> String -> IO ScoreBoard
+restart scoreBoard msg = do
+  putStrLn $ msg ++ " ... Try again"
+  play scoreBoard
